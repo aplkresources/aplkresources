@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AP.LK Resources</title>
-    <!-- Graduation Cap Emoji Favicon -->
+    <title>AP.LK Resources | Learning Portal</title>
     <link rel="icon" href="https://fav.farm/🎓" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -24,7 +23,7 @@
         
         .nav-link-active { color: #2563eb; border-bottom: 2px solid #2563eb; }
         
-        .folder-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
+        .folder-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; position: relative; }
         .folder-card:hover { transform: translateY(-4px); border-color: #3b82f6; background-color: #eff6ff; }
 
         .hidden-access { display: none !important; }
@@ -38,6 +37,52 @@
         .shake-error {
             animation: shake 0.4s ease-in-out;
             border-color: #ef4444 !important;
+        }
+
+        .free-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #10b981;
+            color: white;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 9999px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 10;
+            letter-spacing: 0.05em;
+        }
+
+        /* Horizontal Scroll Styles */
+        .recent-scroll-viewport {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+            padding: 20px 0;
+        }
+
+        .recent-scroll-track {
+            display: flex;
+            flex-direction: row;
+            gap: 1.5rem;
+            width: max-content;
+            animation: scroll-horizontal 30s linear infinite;
+        }
+
+        .recent-scroll-viewport:hover .recent-scroll-track {
+            animation-play-state: paused;
+        }
+
+        @keyframes scroll-horizontal {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); } 
+        }
+
+        .lesson-card-horizontal {
+            width: 350px;
+            flex-shrink: 0;
         }
     </style>
 </head>
@@ -102,7 +147,7 @@
             </div>
         </nav>
 
-        <main id="main-container" class="pt-24 pb-12 px-4 max-w-7xl mx-auto flex-grow">
+        <main id="main-container" class="pt-24 pb-12 px-4 max-w-7xl mx-auto flex-grow w-full overflow-x-hidden">
             <!-- Content Injected via JS -->
         </main>
 
@@ -122,7 +167,6 @@
         let activePage = 'home';
         let currentFolder = null;
 
-        // Video Lessons
         const lessons = [
             { id: 1, title: "චලිතය Day 01 - Rotary recording (ආරම්භය)", category: "Day 01", series: "චලිතය Series", youtubeId: "_LZpIyLycA8" },
             { id: 2, title: "චලිතය Day 01 - Indeepa recording (ආරම්භය)", category: "Day 01", series: "චලිතය Series", youtubeId: "Q8ap6gSOw8Q" },
@@ -132,7 +176,6 @@
             { id: 6, title: "චලිතය Day 03 - Indeepa recording", category: "Day 03", series: "චලිතය Series", youtubeId: "qnZvDEA-t08" }
         ];
 
-        // Notes Links (Theory From Last Week 01 - 10)
         const noteLinks = [
             { name: "Theory From Last Week 01", url: "https://drive.google.com/file/d/1EpOjWuu6NRGX7C3YU15rc6JSO93ohGEM/view?usp=drive_link", folder: "Theory From Last Week" },
             { name: "Theory From Last Week 02", url: "https://drive.google.com/file/d/1RMcWbf177WBq5RHgFrBLimrI53gOxhNZ/view?usp=drive_link", folder: "Theory From Last Week" },
@@ -174,12 +217,9 @@
         function navigateTo(page, folder = null) {
             activePage = page;
             currentFolder = folder;
-            
-            // UI Updates
             document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('nav-link-active'));
             const activeBtn = document.getElementById(`nav-${page}`);
             if (activeBtn) activeBtn.classList.add('nav-link-active');
-            
             renderPage();
             window.scrollTo(0, 0);
         }
@@ -190,6 +230,26 @@
             
             switch(activePage) {
                 case 'home':
+                    const topLessons = lessons;
+                    const lessonsHtml = topLessons.map(lesson => `
+                        <div onclick="window.open('https://www.youtube.com/watch?v=${lesson.youtubeId}', '_blank')" class="lesson-card-horizontal group relative cursor-pointer bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl transition flex flex-col p-3 gap-3">
+                            <div class="free-badge">FREE</div>
+                            <div class="relative w-full aspect-video rounded-xl overflow-hidden">
+                                <img src="https://img.youtube.com/vi/${lesson.youtubeId}/hqdefault.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                <div class="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <div class="w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center">
+                                        <i class="fas fa-play text-white"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="px-1 pb-1">
+                                <p class="text-blue-600 text-[10px] font-bold uppercase mb-1">${lesson.category}</p>
+                                <h3 class="font-bold text-slate-800 text-sm leading-snug line-clamp-1">${lesson.title}</h3>
+                                <p class="text-[11px] text-slate-400 mt-1">${lesson.series}</p>
+                            </div>
+                        </div>
+                    `).join('');
+
                     container.innerHTML = `
                         <div class="page-transition">
                             <section class="bg-blue-600 rounded-3xl p-8 md:p-12 mb-12 text-white relative overflow-hidden shadow-2xl">
@@ -204,25 +264,19 @@
                                 <i class="fas fa-graduation-cap absolute -right-10 -bottom-10 text-[200px] text-blue-500 opacity-20 rotate-12"></i>
                             </section>
 
-                            <h2 class="text-xl font-bold mb-6 text-slate-800 flex items-center gap-2">
-                                <i class="fas fa-play-circle text-blue-600"></i>
-                                Recent Video Lessons
-                            </h2>
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                ${lessons.slice(0, 3).map(lesson => `
-                                    <div onclick="window.open('https://www.youtube.com/watch?v=${lesson.youtubeId}', '_blank')" class="group cursor-pointer bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl transition">
-                                        <div class="relative aspect-video">
-                                            <img src="https://img.youtube.com/vi/${lesson.youtubeId}/hqdefault.jpg" class="w-full h-full object-cover">
-                                            <div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition flex items-center justify-center">
-                                                <i class="fas fa-play text-white text-4xl opacity-0 group-hover:opacity-100 transition"></i>
-                                            </div>
-                                        </div>
-                                        <div class="p-4">
-                                            <p class="text-blue-600 text-xs font-bold uppercase mb-1">${lesson.category}</p>
-                                            <h3 class="font-bold text-slate-800 line-clamp-1">${lesson.title}</h3>
-                                        </div>
+                            <div>
+                                <h2 class="text-xl font-bold mb-4 text-slate-800 flex items-center gap-2 px-2">
+                                    <i class="fas fa-play-circle text-blue-600"></i>
+                                    Recently Added Lessons
+                                </h2>
+                                
+                                <div class="recent-scroll-viewport">
+                                    <div class="recent-scroll-track">
+                                        ${lessonsHtml}
+                                        <!-- Repeat for seamless looping -->
+                                        ${lessonsHtml}
                                     </div>
-                                `).join('')}
+                                </div>
                             </div>
                         </div>
                     `;
@@ -255,6 +309,7 @@
                                 <h1 class="text-3xl font-bold mb-10 text-slate-800">Video Library</h1>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                                     <div onclick="navigateTo('library', 'චලිතය Series')" class="folder-card bg-white p-8 rounded-3xl border border-slate-200 shadow-sm flex flex-col items-center">
+                                        <div class="free-badge">FREE</div>
                                         <div class="w-20 h-20 bg-blue-100 rounded-3xl flex items-center justify-center mb-6 text-blue-600">
                                             <i class="fas fa-folder-open text-3xl"></i>
                                         </div>
@@ -319,7 +374,6 @@
             }
         }
 
-        // Initialize state on load
         window.onload = () => {
             if (sessionStorage.getItem('isAuthorized') === 'true') {
                 unlockPortal();
@@ -329,5 +383,4 @@
         };
     </script>
 </body>
-
 </html>
