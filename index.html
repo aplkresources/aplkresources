@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AP.LK Resources | Learning Portal</title>
+    <link rel="icon" href="https://fav.farm/🎓" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a; /* Deep Dark Blue/Slate */
+            color: #f1f5f9;
+            scroll-behavior: smooth;
+        }
+
+        /* Glassmorphism Navigation */
+        .glass-nav { 
+            background: rgba(15, 23, 42, 0.8); 
+            backdrop-filter: blur(12px); 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08); 
+        }
+
+        .page-transition { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .nav-link-active { color: #3b82f6; border-bottom: 2px solid #3b82f6; }
+        
+        /* Glassy Category Folders */
+        .glass-folder { 
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+            cursor: pointer; 
+            position: relative; 
+            overflow: hidden;
+        }
+        .glass-folder:hover { 
+            transform: translateY(-6px); 
+            border-color: rgba(59, 130, 246, 0.5); 
+            background: rgba(255, 255, 255, 0.07);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        .hidden-access { display: none !important; }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            50% { transform: translateX(8px); }
+            75% { transform: translateX(-8px); }
+        }
+        .shake-error {
+            animation: shake 0.4s ease-in-out;
+            border-color: #ef4444 !important;
+        }
+
+        .free-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #3b82f6;
+            color: white;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 9999px;
+            z-index: 10;
+        }
+
+        .recent-scroll-viewport {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            padding: 20px 0;
+        }
+
+        .recent-scroll-track {
+            display: flex;
+            flex-direction: row;
+            gap: 1.5rem;
+            width: max-content;
+            animation: scroll-horizontal 40s linear infinite;
+        }
+
+        .recent-scroll-viewport:hover .recent-scroll-track {
+            animation-play-state: paused;
+        }
+
+        @keyframes scroll-horizontal {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); } 
+        }
+
+        .lesson-card-horizontal {
+            width: 320px;
+            flex-shrink: 0;
+        }
+
+        #mobile-menu-dropdown {
+            display: none;
+            background: #1e293b;
+            border: 1px solid #334155;
+            transform-origin: top right;
+            animation: scaleIn 0.2s ease-out;
+        }
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Login Overlay -->
+    <div id="login-screen" class="fixed inset-0 z-[100] bg-slate-950 flex items-center justify-center p-6">
+        <div id="login-card" class="bg-slate-900 p-8 md:p-10 rounded-[2.5rem] shadow-2xl border border-slate-800 w-full max-w-[400px] transition-all duration-300">
+            <div class="flex flex-col items-center mb-8">
+                <div class="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-blue-500/20">
+                    <i class="fas fa-graduation-cap text-2xl text-white"></i>
+                </div>
+                <h2 class="text-xl font-extrabold text-white tracking-tight">Student Access</h2>
+                <p class="text-slate-500 text-xs mt-1 font-medium">Please sign in to your portal</p>
+            </div>
+            
+            <form id="login-form" onsubmit="handleLogin(event)" class="space-y-5">
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1.5 ml-1 tracking-wider">Username</label>
+                    <div class="relative">
+                        <i class="fas fa-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 text-sm"></i>
+                        <input type="text" id="username" required placeholder="Enter username" class="w-full pl-11 pr-4 py-3.5 rounded-2xl border border-slate-800 bg-slate-950/50 text-white focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all text-sm">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1.5 ml-1 tracking-wider">Password</label>
+                    <div class="relative">
+                        <i class="fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 text-sm"></i>
+                        <input type="password" id="password" required placeholder="••••••••" class="w-full pl-11 pr-4 py-3.5 rounded-2xl border border-slate-800 bg-slate-950/50 text-white focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all text-sm">
+                    </div>
+                </div>
+                
+                <div id="login-error" class="hidden flex items-center justify-center gap-2 text-red-400 text-[11px] font-bold bg-red-950/30 py-2.5 rounded-xl border border-red-900/50">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span>INVALID USERNAME OR PASSWORD</span>
+                </div>
+
+                <button type="submit" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold hover:bg-blue-700 transition-all shadow-xl shadow-blue-500/20 active:scale-[0.98]">
+                    Enter Portal
+                </button>
+            </form>
+            
+            <p class="mt-8 text-center text-[10px] text-slate-600 font-medium uppercase tracking-widest">
+                Authorized Access Only • AP.LK Physics
+            </p>
+        </div>
+    </div>
+
+    <!-- Main App Content -->
+    <div id="app-content" class="hidden-access flex-grow flex flex-col">
+        <nav class="glass-nav fixed top-0 w-full z-50">
+            <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between relative">
+                <div class="flex items-center gap-3 cursor-pointer group" onclick="navigateTo('home')">
+                    <div class="bg-blue-600 text-white w-10 h-10 rounded-xl flex items-center justify-center group-hover:bg-blue-700 transition-colors shadow-lg shadow-blue-500/20">
+                        <i class="fas fa-home text-sm"></i>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-bold text-lg leading-none tracking-tight text-white">AP.LK <span class="text-blue-500">Resources</span></span>
+                        <span class="text-[9px] text-slate-500 font-bold uppercase tracking-widest mt-0.5">Dashboard</span>
+                    </div>
+                </div>
+                
+                <div class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-400">
+                    <button onclick="navigateTo('home')" id="nav-home" class="hover:text-blue-500 transition py-5 px-1 nav-link-active">Home</button>
+                    <button onclick="navigateTo('library')" id="nav-library" class="hover:text-blue-500 transition py-5 px-1">Video Library</button>
+                    <button onclick="navigateTo('notes')" id="nav-notes" class="hover:text-blue-500 transition py-5 px-1">Study Notes</button>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <button onclick="logout()" class="hidden sm:flex text-slate-400 hover:text-red-400 transition text-sm font-bold items-center gap-2 bg-slate-800/50 px-4 py-2 rounded-xl border border-slate-700">
+                        <span>Logout</span>
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                    
+                    <button id="dot-menu-btn" onclick="toggleMobileMenu()" class="md:hidden w-10 h-10 flex items-center justify-center rounded-xl bg-slate-800 text-slate-400 hover:bg-slate-700 transition">
+                        <i class="fas fa-ellipsis-v text-sm"></i>
+                    </button>
+                </div>
+
+                <div id="mobile-menu-dropdown" class="absolute top-full right-4 mt-2 w-52 rounded-2xl shadow-2xl z-[60] py-2 overflow-hidden">
+                    <button onclick="navigateTo('home'); toggleMobileMenu();" class="w-full text-left px-5 py-3.5 text-sm font-semibold text-slate-300 hover:bg-slate-800 flex items-center gap-3">
+                        <i class="fas fa-home text-blue-500 w-5"></i> Home
+                    </button>
+                    <button onclick="navigateTo('library'); toggleMobileMenu();" class="w-full text-left px-5 py-3.5 text-sm font-semibold text-slate-300 hover:bg-slate-800 flex items-center gap-3">
+                        <i class="fas fa-play-circle text-blue-500 w-5"></i> Video Library
+                    </button>
+                    <button onclick="navigateTo('notes'); toggleMobileMenu();" class="w-full text-left px-5 py-3.5 text-sm font-semibold text-slate-300 hover:bg-slate-800 flex items-center gap-3">
+                        <i class="fas fa-file-alt text-blue-500 w-5"></i> Study Notes
+                    </button>
+                    <div class="border-t border-slate-700 my-1"></div>
+                    <button onclick="logout()" class="w-full text-left px-5 py-3.5 text-sm font-semibold text-red-400 hover:bg-red-900/20 flex items-center gap-3">
+                        <i class="fas fa-sign-out-alt w-5"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <main id="main-container" class="pt-24 pb-12 px-4 max-w-7xl mx-auto flex-grow w-full">
+            <!-- Content Injected via JS -->
+        </main>
+
+        <footer class="border-t border-slate-800 py-8 bg-slate-950 mt-auto">
+            <div class="max-w-7xl mx-auto px-4 flex flex-col items-center justify-center gap-4 text-sm text-slate-500">
+                <div class="flex items-center gap-2 font-bold text-slate-600">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>AP.LK LEARNING PORTAL</span>
+                </div>
+                <p>&copy; 2026 Anuradha Perera Physics. All Rights Reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const AUTH_CONFIG = { user: "apnewby", pass: "john2008" };
+        let activePage = 'home';
+        let currentFolder = null;
+
+        const studyNotes = [
+            { title: "Theory From Last Week 01", file: "flw 01.pdf", url: "https://drive.google.com/file/d/1EpOjWuu6NRGX7C3YU15rc6JSO93ohGEM/view?usp=drive_link" },
+            { title: "Theory From Last Week 02", file: "flw 02.pdf", url: "https://drive.google.com/file/d/1RMcWbf177WBq5RHgFrBLimrI53gOxhNZ/view?usp=drive_link" },
+            { title: "Theory From Last Week 03", file: "flw 03.pdf", url: "https://drive.google.com/file/d/1_SvzQMvqzQ0ytnQ8JcCPDrxCsgSxEolj/view?usp=drive_link" },
+            { title: "Theory From Last Week 04", file: "flw 04.pdf", url: "https://drive.google.com/file/d/1vkmyRTmbVDir3JAnMcNrAStIE1scRbiR/view?usp=drive_link" },
+            { title: "Theory From Last Week 05", file: "flw 05.pdf", url: "https://drive.google.com/file/d/1UYTgo0xkS4RZB22FWrKW4dBKBtwvwSPV/view?usp=drive_link" },
+            { title: "Theory From Last Week 06", file: "flw 06.pdf", url: "https://drive.google.com/file/d/1ukGxfs-I15A-7arGIJB7abRby2FHZ7R4/view?usp=drive_link" },
+            { title: "Theory From Last Week 07", file: "flw 07.pdf", url: "https://drive.google.com/file/d/1ukGxfs-I15A-7arGIJB7abRby2FHZ7R4/view?usp=drive_link" },
+            { title: "Theory From Last Week 08", file: "flw 08.pdf", url: "https://drive.google.com/file/d/1nOlWwUnqId9I_Mj16vJ0H_K-Ld7Kwr3H/view?usp=drive_link" },
+            { title: "Theory From Last Week 09", file: "flw 09.pdf", url: "https://drive.google.com/file/d/1Tedktp49is1OQ2Gdk6NcG1m4PTyPBXJ3/view?usp=drive_link" },
+            { title: "Theory From Last Week 10", file: "flw 10.pdf", url: "https://drive.google.com/file/d/1m43FmKZC9OTk8CpTxzh-7S7OF1XDi41j/view?usp=drive_link" }
+        ];
+
+        const lessons = [
+            // 2026 March (Placeholder)
+            { id: 701, title: "March Lesson 01 - Upcoming", category: "Theory", series: "2026 March Recordings", youtubeId: "video_march_1" },
+            // 2026 February (Placeholder)
+            { id: 601, title: "February Lesson 01 - Upcoming", category: "Theory", series: "2026 February Recordings", youtubeId: "video_feb_1" },
+            // 2026 January (Placeholder)
+            { id: 501, title: "January Lesson 01 - Upcoming", category: "Theory", series: "2026 January Recordings", youtubeId: "video_jan_1" },
+            // 2025 December (Placeholder)
+            { id: 401, title: "December Lesson 01 - Theory", category: "Theory", series: "2025 December Recordings", youtubeId: "video_dec_1" },
+            
+            // 2025 November Recordings
+            { id: 301, title: "Homework Discussion 26-08-2025", category: "Discussion", series: "2025 November Recordings", youtubeId: "GgrqY6neJ3U", special: "homework" },
+            { id: 302, title: "Homework Discussion 02-09-2025", category: "Discussion", series: "2025 November Recordings", youtubeId: "xmkbdjLNtSc", special: "homework" },
+            { id: 303, title: "Homework Discussion 04-11-2025", category: "Discussion", series: "2025 November Recordings", youtubeId: "X9m2q3lCNH0", special: "homework" },
+            { id: 304, title: "ප්‍රවේග කාල ප්‍රස්ථාර ආරම්භය Indeepa recording", category: "Theory", series: "2025 November Recordings", youtubeId: "EmkdE-IxkhE" },
+            { id: 305, title: "Newton නියම හා බල සමතුලිතතාවය ආරම්භය Indeepa recording", category: "Theory", series: "2025 November Recordings", youtubeId: "Cd7MB7jNb6g" },
+            { id: 306, title: "Newton නියම හා බල සමතුලිතතාවය ආරම්භය Rotary recording", category: "Theory", series: "2025 November Recordings", youtubeId: "lQpU7t0OqXo" },
+            { id: 307, title: "Homework Discussion 11-11-2025", category: "Discussion", series: "2025 November Recordings", youtubeId: "DD6eo0WnN4k", special: "homework" },
+            { id: 308, title: "විශේෂ මිනුම් උපකරණ, ත්වරණ කාල ප්‍රස්ථාර recording", category: "Theory", series: "2025 November Recordings", youtubeId: "l2HmyKE_rIY" },
+            { id: 309, title: "Newton නියම ආරම්භය Indeepa recording", category: "Theory", series: "2025 November Recordings", youtubeId: "1qAhNfgWydI" },
+            { id: 310, title: "Newton නියම ආරම්භය Rotary recording", category: "Theory", series: "2025 November Recordings", youtubeId: "d0xTtqfzoOo" },
+            { id: 311, title: "බල වල ලක්ෂණ ආරම්භය recording", category: "Theory", series: "2025 November Recordings", youtubeId: "1qAhNfgWydI" },
+
+            // 2025 October Recordings
+            { id: 201, title: "ප්‍රක්ෂිප්ත ආරම්භය Indeepa Recording", category: "Theory", series: "2025 October Recordings", youtubeId: "D0TCNw_sLlY" },
+            { id: 202, title: "ප්‍රක්ෂිප්ත ආරම්භය Rotary Recording", category: "Theory", series: "2025 October Recordings", youtubeId: "9TB2PIYZ9DY" },
+            { id: 203, title: "Homework Discussion 07-10-2025", category: "Discussion", series: "2025 October Recordings", youtubeId: "D1ZgX4gFVj0", special: "homework" },
+            { id: 204, title: "ප්‍රක්ෂිප්ත විශේෂ කරුණු Indeepa Recording", category: "Theory", series: "2025 October Recordings", youtubeId: "4GBCnqbfmkQ" },
+            { id: 205, title: "ප්‍රක්ෂිප්ත විශේෂ කරුණු Rotary Recording", category: "Theory", series: "2025 October Recordings", youtubeId: "k_L0ANKbdNs" },
+            { id: 206, title: "Homework Discussion 14-10-2025", category: "Discussion", series: "2025 October Recordings", youtubeId: "htC8-KfqdOU", special: "homework" },
+            { id: 207, title: "චලිත ප්‍රස්ථාර ආරම්භය Indeepa Recording", category: "Theory", series: "2025 October Recordings", youtubeId: "vQ7zGFMrOGI" },
+            { id: 208, title: "චලිත ප්‍රස්ථාර ආරම්භය Rotary Recording", category: "Theory", series: "2025 October Recordings", youtubeId: "EUHGssWHio8" },
+            { id: 209, title: "Newton Law ආරම්භය", category: "Theory", series: "2025 October Recordings", youtubeId: "PDq86T-DZ3M" },
+            { id: 210, title: "Newton Law Day 02", category: "Theory", series: "2025 October Recordings", youtubeId: "uMDhNIL40fE" },
+            { id: 211, title: "ආවේගය හා ගම්‍යතා සන්ස්ථිතිය", category: "Theory", series: "2025 October Recordings", youtubeId: "nCazHvXo1BA" },
+            { id: 212, title: "ගම්‍යතා විශේෂ කරුණු", category: "Theory", series: "2025 October Recordings", youtubeId: "YIQHd4tF1Qw" },
+            { id: 213, title: "Homework Discussion 21-10-2025", category: "Discussion", series: "2025 October Recordings", youtubeId: "LFl7txDShV4", special: "homework" },
+            { id: 214, title: "චලිත ප්‍රස්ථාර Day 02 Indeepa Recording", category: "Theory", series: "2025 October Recordings", youtubeId: "itE6a3o73q0" },
+            { id: 215, title: "චලිත ප්‍රස්ථාර Day 02 Rotary Recording", category: "Theory", series: "2025 October Recordings", youtubeId: "IL--yiRFf9c" },
+            { id: 216, title: "Homework Discussion 28-10-2025", category: "Discussion", series: "2025 October Recordings", youtubeId: "YmQfprUtvbw", special: "homework" },
+
+            // 2025 September Recordings
+            { id: 101, title: "චලිතය Day 01 - Rotary recording", category: "Theory", series: "2025 September Recordings", youtubeId: "_LZpIyLycA8" },
+            { id: 102, title: "චලිතය Day 01 - Indeepa recording", category: "Theory", series: "2025 September Recordings", youtubeId: "Q8ap6gSOw8Q" },
+            { id: 103, title: "චලිතය Day 02 - Rotary recording", category: "Theory", series: "2025 September Recordings", youtubeId: "AkJghTZLiWQ" },
+            { id: 104, title: "චලිතය Day 02 - Indeepa recording", category: "Theory", series: "2025 September Recordings", youtubeId: "3Bxp5uQPb4o"},
+            { id: 105, title: "Homework Discussion 09-09-2025", category: "Discussion", series: "2025 September Recordings", youtubeId: "qOhmCEd9Wjw", special: "homework"},
+            { id: 106, title: "චලිතය Day 03 - Rotary recording", category: "Theory", series: "2025 September Recordings", youtubeId: "B-qGFzgcSCA"},
+            { id: 107, title: "චලිතය Day 03 - Indeepa recording", category: "Theory", series: "2025 September Recordings", youtubeId: "qnZvDEA-t08"},
+            { id: 108, title: "ගුරුත්වය යටතේ චලිතය Day 01 - Indeepa recording", category: "Theory", series: "2025 September Recordings", youtubeId: "oBTgucaFl44"},
+            { id: 109, title: "ගුරුත්වය යටතේ චලිතය Day 01 - Rotary recording", category: "Theory", series: "2025 September Recordings", youtubeId: "3wsiPQDRJcU"},
+            { id: 110, title: "Homework Discussion 30-09-2025", category: "Discussion", series: "2025 September Recordings", youtubeId: "hGNmA3dhexQ", special: "homework" }
+        ];
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const u = document.getElementById('username').value;
+            const p = document.getElementById('password').value;
+            if (u === AUTH_CONFIG.user && p === AUTH_CONFIG.pass) {
+                sessionStorage.setItem('isAuthorized', 'true');
+                unlockPortal();
+            } else {
+                document.getElementById('login-error').classList.remove('hidden');
+                document.getElementById('login-card').classList.add('shake-error');
+                setTimeout(() => { document.getElementById('login-card').classList.remove('shake-error'); }, 400);
+            }
+        }
+
+        function unlockPortal() {
+            document.getElementById('login-screen').classList.add('hidden-access');
+            document.getElementById('app-content').classList.remove('hidden-access');
+            renderPage();
+        }
+
+        function logout() {
+            sessionStorage.removeItem('isAuthorized');
+            location.reload();
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu-dropdown');
+            const isVisible = menu.style.display === 'block';
+            menu.style.display = isVisible ? 'none' : 'block';
+        }
+
+        function navigateTo(page, folder = null) {
+            activePage = page;
+            currentFolder = folder;
+            document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('nav-link-active'));
+            const activeBtn = document.getElementById(`nav-${page}`);
+            if (activeBtn) activeBtn.classList.add('nav-link-active');
+            renderPage();
+            window.scrollTo(0, 0);
+        }
+
+        function renderPage() {
+            if (sessionStorage.getItem('isAuthorized') !== 'true') return;
+            const container = document.getElementById('main-container');
+            
+            switch(activePage) {
+                case 'home':
+                    const recentLessons = lessons.filter(l => l.series === "2025 November Recordings" || l.series === "2025 October Recordings").slice(0, 8);
+                    const lessonsHtml = recentLessons.map(lesson => `
+                        <div onclick="window.open('https://www.youtube.com/watch?v=${lesson.youtubeId}', '_blank')" class="lesson-card-horizontal group relative cursor-pointer bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-sm hover:border-blue-500 transition flex flex-col p-3 gap-3">
+                            <div class="free-badge">NEW</div>
+                            <div class="relative w-full aspect-video rounded-xl overflow-hidden bg-slate-800">
+                                <img src="https://img.youtube.com/vi/${lesson.youtubeId}/hqdefault.jpg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" onerror="this.src='https://placehold.co/600x400/1e293b/64748b?text=Video+Loading'">
+                            </div>
+                            <div class="px-1 pb-1">
+                                <p class="${lesson.special === 'homework' ? 'text-orange-400' : 'text-blue-400'} text-[10px] font-bold uppercase mb-1">${lesson.category}</p>
+                                <h3 class="font-bold text-slate-100 text-sm leading-snug line-clamp-1">${lesson.title}</h3>
+                                <p class="text-[11px] text-slate-500 mt-1">${lesson.series}</p>
+                            </div>
+                        </div>
+                    `).join('');
+
+                    container.innerHTML = `
+                        <div class="page-transition">
+                            <section class="bg-gradient-to-br from-blue-700 to-blue-900 rounded-[2.5rem] p-10 md:p-14 mb-12 text-white relative overflow-hidden shadow-2xl">
+                                <div class="relative z-10 max-w-2xl">
+                                    <h1 class="text-4xl md:text-5xl font-extrabold mb-5 leading-tight tracking-tight">Physics Hub <span class="text-blue-200">2.0</span></h1>
+                                    <p class="text-blue-100 text-lg mb-8 opacity-80">Premium study materials and HD recordings for advanced level students.</p>
+                                    <button onclick="navigateTo('notes')" class="bg-white text-blue-900 px-10 py-4 rounded-2xl font-bold hover:bg-blue-50 transition shadow-xl flex items-center gap-3 active:scale-95">
+                                        <i class="fas fa-file-pdf"></i> Access Study Notes
+                                    </button>
+                                </div>
+                                <i class="fas fa-microscope absolute -bottom-10 -right-10 text-[18rem] text-white/10 -rotate-12"></i>
+                            </section>
+
+                            <div>
+                                <h2 class="text-xl font-bold mb-4 text-white px-2 flex items-center gap-2">
+                                    <i class="fas fa-fire text-orange-500 text-sm"></i> Latest Updates
+                                </h2>
+                                <div class="recent-scroll-viewport">
+                                    <div class="recent-scroll-track">${lessonsHtml}${lessonsHtml}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'library':
+                    if (currentFolder) {
+                        const folderLessons = lessons.filter(l => l.series === currentFolder);
+                        container.innerHTML = `
+                            <div class="page-transition">
+                                <div class="mb-8 flex items-center gap-4">
+                                    <button onclick="navigateTo('library')" class="w-10 h-10 rounded-full border border-slate-700 flex items-center justify-center hover:bg-slate-800 transition text-white"><i class="fas fa-arrow-left text-sm"></i></button>
+                                    <h1 class="text-2xl md:text-3xl font-bold text-white">${currentFolder}</h1>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                                    ${folderLessons.length > 0 ? folderLessons.map(lesson => `
+                                        <div onclick="window.open('https://www.youtube.com/watch?v=${lesson.youtubeId}', '_blank')" class="cursor-pointer group bg-slate-900 p-3 rounded-2xl border border-slate-800 hover:border-blue-500 transition">
+                                            <div class="relative aspect-video rounded-xl overflow-hidden mb-3 bg-slate-800">
+                                                <img src="https://img.youtube.com/vi/${lesson.youtubeId}/hqdefault.jpg" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://placehold.co/600x400/1e293b/64748b?text=Video+Coming+Soon'">
+                                            </div>
+                                            <h3 class="font-bold text-sm text-slate-100 group-hover:text-blue-400 transition leading-snug px-1">${lesson.title}</h3>
+                                            <div class="flex items-center gap-2 mt-2 px-1">
+                                                <span class="${lesson.special === 'homework' ? 'bg-orange-950/40 text-orange-400' : 'bg-blue-950/40 text-blue-400'} text-[9px] px-2 py-0.5 rounded-full font-bold uppercase border border-current/20">${lesson.category}</span>
+                                            </div>
+                                        </div>
+                                    `).join('') : '<p class="text-slate-500 font-bold p-8">No lessons uploaded for this month yet.</p>'}
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        // Folder Array to generate categories
+                        const folders = [
+                            { name: "2026 March Recordings", label: "2026 March", badge: "UPCOMING", icon: "fa-rocket" },
+                            { name: "2026 February Recordings", label: "2026 February", badge: "UPCOMING", icon: "fa-star" },
+                            { name: "2026 January Recordings", label: "2026 January", badge: "UPCOMING", icon: "fa-bolt" },
+                            { name: "2025 December Recordings", label: "2025 December", badge: "NEW", icon: "fa-snowflake" },
+                            { name: "2025 November Recordings", label: "2025 November", badge: "ACTIVE", icon: "fa-play" },
+                            { name: "2025 October Recordings", label: "2025 October", badge: "", icon: "fa-calendar-alt" },
+                            { name: "2025 September Recordings", label: "2025 September", badge: "", icon: "fa-archive" }
+                        ];
+
+                        container.innerHTML = `
+                            <div class="page-transition">
+                                <h1 class="text-3xl font-extrabold mb-10 text-white tracking-tight">Recordings <span class="text-blue-500">Archive</span></h1>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                                    ${folders.map(f => `
+                                        <div onclick="navigateTo('library', '${f.name}')" class="glass-folder p-10 rounded-[2.5rem] flex flex-col items-center group">
+                                            ${f.badge ? `<div class="free-badge ${f.badge === 'UPCOMING' ? 'bg-purple-600' : ''}">${f.badge}</div>` : ''}
+                                            <div class="w-20 h-20 bg-blue-600/10 rounded-[2rem] flex items-center justify-center mb-6 text-blue-500 group-hover:bg-blue-600 group-hover:text-white transition-all duration-500">
+                                                <i class="fas ${f.icon} text-2xl"></i>
+                                            </div>
+                                            <h3 class="text-2xl font-bold text-white group-hover:text-blue-400 transition-colors">${f.label}</h3>
+                                            <p class="text-slate-500 text-sm mt-3 font-medium">Click to view lessons</p>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }
+                    break;
+                
+                case 'notes':
+                    container.innerHTML = `
+                        <div class="page-transition">
+                            <h1 class="text-3xl font-extrabold mb-10 text-white tracking-tight">Study <span class="text-blue-500">Notes</span></h1>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                                ${studyNotes.map(note => `
+                                    <a href="${note.url}" target="_blank" class="bg-slate-900 p-6 rounded-[2rem] border border-slate-800 flex flex-col items-center hover:border-blue-500 hover:bg-slate-800/50 transition-all shadow-sm hover:shadow-2xl group">
+                                        <div class="w-16 h-16 bg-red-900/10 text-red-500 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-red-600 group-hover:text-white transition-all duration-500">
+                                            <i class="fas fa-file-pdf text-2xl"></i>
+                                        </div>
+                                        <span class="font-bold text-sm text-center text-slate-200 leading-snug mb-2 group-hover:text-white transition-colors">${note.title}</span>
+                                        <span class="text-[9px] text-slate-600 uppercase font-bold tracking-widest">${note.file}</span>
+                                    </a>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                    break;
+            }
+        }
+
+        window.onload = () => {
+            if (sessionStorage.getItem('isAuthorized') === 'true') unlockPortal();
+        };
+    </script>
+</body>
+</html>
