@@ -225,21 +225,52 @@
     </div>
 
     <script>
-        const AUTH_CONFIG = { user: "apnewby", pass: "john2008" };
+        const AUTH_CONFIG = { user: "apuser", pass: "ap2027" };
         let activePage = 'home';
         let currentFolder = null;
 
         const studyNotes = [
-            { title: "Theory From Last Week 01", file: "flw 01.pdf", url: "https://drive.google.com/file/d/1EpOjWuu6NRGX7C3YU15rc6JSO93ohGEM/view?usp=drive_link" },
-            { title: "Theory From Last Week 02", file: "flw 02.pdf", url: "https://drive.google.com/file/d/1RMcWbf177WBq5RHgFrBLimrI53gOxhNZ/view?usp=drive_link" },
-            { title: "Theory From Last Week 03", file: "flw 03.pdf", url: "https://drive.google.com/file/d/1_SvzQMvqzQ0ytnQ8JcCPDrxCsgSxEolj/view?usp=drive_link" },
-            { title: "Theory From Last Week 04", file: "flw 04.pdf", url: "https://drive.google.com/file/d/1vkmyRTmbVDir3JAnMcNrAStIE1scRbiR/view?usp=drive_link" },
-            { title: "Theory From Last Week 05", file: "flw 05.pdf", url: "https://drive.google.com/file/d/1UYTgo0xkS4RZB22FWrKW4dBKBtwvwSPV/view?usp=drive_link" },
-            { title: "Theory From Last Week 06", file: "flw 06.pdf", url: "https://drive.google.com/file/d/1ukGxfs-I15A-7arGIJB7abRby2FHZ7R4/view?usp=drive_link" },
-            { title: "Theory From Last Week 07", file: "flw 07.pdf", url: "https://drive.google.com/file/d/1ukGxfs-I15A-7arGIJB7abRby2FHZ7R4/view?usp=drive_link" },
-            { title: "Theory From Last Week 08", file: "flw 08.pdf", url: "https://drive.google.com/file/d/1nOlWwUnqId9I_Mj16vJ0H_K-Ld7Kwr3H/view?usp=drive_link" },
-            { title: "Theory From Last Week 09", file: "flw 09.pdf", url: "https://drive.google.com/file/d/1Tedktp49is1OQ2Gdk6NcG1m4PTyPBXJ3/view?usp=drive_link" },
-            { title: "Theory From Last Week 10", file: "flw 10.pdf", url: "https://drive.google.com/file/d/1m43FmKZC9OTk8CpTxzh-7S7OF1XDi41j/view?usp=drive_link" }
+            { title: "Theory From Last Week 01", file: "flw 01.pdf", url: "https://drive.google.com/file/d/1EpOjWuu6NRGX7C3YU15rc6JSO93ohGEM/view?usp=sharing" },
+            { title: "Theory From Last Week 02", file: "flw 02.pdf", url: "https://drive.google.com/file/d/1RMcWbf177WBq5RHgFrBLimrI53gOxhNZ/view?usp=sharing" },
+            { title: "Theory From Last Week 03", file: "flw 03.pdf", url: "https://drive.google.com/file/d/1_SvzQMvqzQ0ytnQ8JcCPDrxCsgSxEolj/view?usp=sharing" },
+            { title: "Theory From Last Week 04", file: "flw 04.pdf", url: "https://drive.google.com/file/d/1vkmyRTmbVDir3JAnMcNrAStIE1scRbiR/view?usp=sharing" },
+            { title: "Theory From Last Week 05", file: "flw 05.pdf", url: "https://drive.google.com/file/d/1UYTgo0xkS4RZB22FWrKW4dBKBtwvwSPV/view?usp=sharing" },
+            { title: "Theory From Last Week 06", file: "flw 06.pdf", url: "https://drive.google.com/file/d/1a5UnkIWM9diu-oRA4oYlO1U8Zt0UDYc8/view?usp=sharing" },
+            { title: "Theory From Last Week 07", file: "flw 07.pdf", url: "https://drive.google.com/file/d/1ukGxfs-I15A-7arGIJB7abRby2FHZ7R4/view?usp=sharing" },
+            { title: "Theory From Last Week 08", file: "flw 08.pdf", url: "https://drive.google.com/file/d/1nOlWwUnqId9I_Mj16vJ0H_K-Ld7Kwr3H/view?usp=sharing" },
+            { title: "Theory From Last Week 09", file: "flw 09.pdf", url: "https://drive.google.com/file/d/1Tedktp49is1OQ2Gdk6NcG1m4PTyPBXJ3/view?usp=sharing" },
+            { title: "Theory From Last Week 10", file: "flw 10.pdf", url: "https://drive.google.com/file/d/1m43FmKZC9OTk8CpTxzh-7S7OF1XDi41j/view?usp=sharing" },
+            { title: "Theory From Last Week 11", file: "flw 11.pdf", url: "https://drive.google.com/file/d/1clOJrbOA9TJ1pfpR9v3tLmW9BdRDHBA8/view?usp=sharing" },
+            { title: "Theory From Last Week 12", file: "flw 12.pdf", url: "" },
+            { title: "Theory From Last Week 13", file: "flw 13.pdf", url: "" },
+            { title: "Theory From Last Week 14", file: "flw 14.pdf", url: "" },
+            { title: "Theory From Last Week 15", file: "flw 15.pdf", url: "" },
+            { title: "Theory From Last Week 16", file: "flw 16.pdf", url: "" },
+            { title: "Theory From Last Week 17", file: "flw 17.pdf", url: "" },
+            { title: "Theory From Last Week 18", file: "flw 18.pdf", url: "" },
+            { title: "Theory From Last Week 19", file: "flw 19.pdf", url: "" },
+            { title: "Theory From Last Week 20", file: "flw 20.pdf", url: "" },
+            { title: "Theory From Last Week 21", file: "flw 21.pdf", url: "" },
+            { title: "Theory From Last Week 22", file: "flw 22.pdf", url: "" },
+            { title: "Theory From Last Week 23", file: "flw 23.pdf", url: "" },
+            { title: "Theory From Last Week 24", file: "flw 24.pdf", url: "" },
+            { title: "Theory From Last Week 25", file: "flw 25.pdf", url: "" },
+            { title: "Theory From Last Week 26", file: "flw 26.pdf", url: "" },
+            { title: "Theory From Last Week 27", file: "flw 27.pdf", url: "" },
+            { title: "Theory From Last Week 28", file: "flw 28.pdf", url: "" },
+            { title: "Theory From Last Week 29", file: "flw 29.pdf", url: "" },
+            { title: "Theory From Last Week 30", file: "flw 30.pdf", url: "" },
+            { title: "Theory From Last Week 31", file: "flw 31.pdf", url: "" },
+            { title: "Theory From Last Week 32", file: "flw 32.pdf", url: "" },
+            { title: "Theory From Last Week 33", file: "flw 33.pdf", url: "" },
+            { title: "Theory From Last Week 34", file: "flw 34.pdf", url: "" },
+            { title: "Theory From Last Week 35", file: "flw 35.pdf", url: "" },
+            { title: "Theory From Last Week 36", file: "flw 36.pdf", url: "" },
+            { title: "Theory From Last Week 37", file: "flw 37.pdf", url: "" },
+            { title: "Theory From Last Week 38", file: "flw 38.pdf", url: "" },
+            { title: "Theory From Last Week 39", file: "flw 39.pdf", url: "" },
+            { title: "Theory From Last Week 40", file: "flw 40.pdf", url: "" },
+            { title: "Theory From Last Week 41", file: "flw 41.pdf", url: "" }
         ];
 
         const lessons = [
