@@ -276,6 +276,9 @@
         ];
 
         const lessons = [
+            // Paper Recordings (Placeholders)
+            { id: 801, title: "Upcoming Videos - Videos Will Drop Here Soon", category: "Paper", series: "Paper Recordings", youtubeId: "UPCOMING" },
+
             // 2026 March (Placeholder)
             { id: 701, title: "ගුරුත්ව කේන්ද්‍රය Part 01 Extra class recording", category: "Extra", series: "2026 March Recordings", youtubeId: "UXgJtII8HOI" },
             { id: 702, title: "ගුරුත්ව කේන්ද්‍රය Part 02 Extra class recording", category: "Extra", series: "2026 March Recordings", youtubeId: "p1ptpIsuLvw" },
@@ -452,13 +455,14 @@
                     } else {
                         // Folder Array to generate categories
                         const folders = [
-                            { name: "2026 March Recordings", label: "2026 March", badge: "UPCOMING", icon: "fa-rocket" },
+                            { name: "Paper Recordings", label: "Paper Recordings", badge: "UPCOMING", icon: "fa-file" },
+                            { name: "2026 March Recordings", label: "2026 March", badge: "UPDATED", icon: "fa-rocket" },
                             { name: "2026 February Recordings", label: "2026 February", badge: "UPCOMING", icon: "fa-star" },
                             { name: "2026 January Recordings", label: "2026 January", badge: "UPCOMING", icon: "fa-bolt" },
                             { name: "2025 December Recordings", label: "2025 December", badge: "NEW", icon: "fa-snowflake" },
                             { name: "2025 November Recordings", label: "2025 November", badge: "ACTIVE", icon: "fa-play" },
-                            { name: "2025 October Recordings", label: "2025 October", badge: "", icon: "fa-calendar-alt" },
-                            { name: "2025 September Recordings", label: "2025 September", badge: "", icon: "fa-archive" }
+                            { name: "2025 October Recordings", label: "2025 October", badge: "ACTIVE", icon: "fa-calendar-alt" },
+                            { name: "2025 September Recordings", label: "2025 September", badge: "ACTIVE", icon: "fa-archive" }
                         ];
 
                         container.innerHTML = `
