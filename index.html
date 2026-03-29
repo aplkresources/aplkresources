@@ -7,6 +7,54 @@
     <link rel="icon" href="https://fav.farm/🎓" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Firebase SDK v12 (Modern Modular) -->
+    <script type="module">
+        // Import the functions you need from the SDKs
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
+
+        // Your Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyALT6yWTBjDTz-hX93n95KzHP5WT1uv8dI",
+            authDomain: "apresourcesv2.firebaseapp.com",
+            projectId: "apresourcesv2",
+            storageBucket: "apresourcesv2.firebasestorage.app",
+            messagingSenderId: "295261112466",
+            appId: "1:295261112466:web:1692d95091a04331687e4b",
+            measurementId: "G-3JM6YVLVTG"
+        };
+
+        try {
+            // Initialize Firebase
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);
+
+            console.log('✅ Firebase initialized successfully');
+            console.log('📍 Auth Domain:', firebaseConfig.authDomain);
+            console.log('🌍 Current URL:', window.location.hostname);
+
+            // Export functions to window scope for use in HTML
+            window.firebaseAuth = {
+                auth,
+                createUserWithEmailAndPassword,
+                signInWithEmailAndPassword,
+                signOut,
+                onAuthStateChanged,
+                updateProfile
+            };
+
+            // Set auth ready flag
+            window.firebaseReady = true;
+            console.log('✅ Firebase Auth ready for login');
+            
+            // Test connection
+            auth.setPersistence({persistence: 'LOCAL'}).catch(e => console.log('Persistence note:', e.code));
+            
+        } catch (error) {
+            console.error('❌ Firebase initialization error:', error);
+            window.firebaseReady = false;
+        }
+    </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
         
@@ -124,38 +172,90 @@
                 <div class="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-blue-500/20">
                     <i class="fas fa-graduation-cap text-2xl text-white"></i>
                 </div>
-                <h2 class="text-xl font-extrabold text-white tracking-tight">Student Access</h2>
-                <p class="text-slate-500 text-xs mt-1 font-medium">Please sign in to your portal</p>
+                <h2 class="text-xl font-extrabold text-white tracking-tight">Student Portal</h2>
+                <p class="text-slate-500 text-xs mt-1 font-medium">Sign in or create account</p>
             </div>
-            
+
+            <!-- Tab Buttons -->
+            <div class="flex gap-2 mb-8 border-b border-slate-800">
+                <button onclick="toggleAuthMode('login')" id="login-tab" class="flex-1 py-3 font-bold text-sm border-b-2 border-blue-600 text-blue-400 transition-all">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Login
+                </button>
+                <button onclick="toggleAuthMode('signup')" id="signup-tab" class="flex-1 py-3 font-bold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-400 transition-all">
+                    <i class="fas fa-user-plus mr-2"></i>Sign Up
+                </button>
+            </div>
+
+            <!-- Login Form -->
             <form id="login-form" onsubmit="handleLogin(event)" class="space-y-5">
                 <div>
-                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1.5 ml-1 tracking-wider">Username</label>
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1.5 ml-1 tracking-wider">Email</label>
                     <div class="relative">
-                        <i class="fas fa-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 text-sm"></i>
-                        <input type="text" id="username" required placeholder="Enter username" class="w-full pl-11 pr-4 py-3.5 rounded-2xl border border-slate-800 bg-slate-950/50 text-white focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all text-sm">
+                        <i class="fas fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 text-sm"></i>
+                        <input type="email" id="login-email" required placeholder="Enter email" class="w-full pl-11 pr-4 py-3.5 rounded-2xl border border-slate-800 bg-slate-950/50 text-white focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all text-sm">
                     </div>
                 </div>
                 <div>
                     <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1.5 ml-1 tracking-wider">Password</label>
                     <div class="relative">
                         <i class="fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 text-sm"></i>
-                        <input type="password" id="password" required placeholder="••••••••" class="w-full pl-11 pr-4 py-3.5 rounded-2xl border border-slate-800 bg-slate-950/50 text-white focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all text-sm">
+                        <input type="password" id="login-password" required placeholder="••••••••" class="w-full pl-11 pr-4 py-3.5 rounded-2xl border border-slate-800 bg-slate-950/50 text-white focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all text-sm">
                     </div>
                 </div>
                 
                 <div id="login-error" class="hidden flex items-center justify-center gap-2 text-red-400 text-[11px] font-bold bg-red-950/30 py-2.5 rounded-xl border border-red-900/50">
                     <i class="fas fa-exclamation-circle"></i>
-                    <span>INVALID USERNAME OR PASSWORD</span>
+                    <span id="error-message">Login failed</span>
                 </div>
 
-                <button type="submit" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold hover:bg-blue-700 transition-all shadow-xl shadow-blue-500/20 active:scale-[0.98]">
-                    Enter Portal
+                <button type="submit" id="login-submit-btn" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold hover:bg-blue-700 transition-all shadow-xl shadow-blue-500/20 active:scale-[0.98] flex items-center justify-center gap-2">
+                    <i class="fas fa-sign-in-alt"></i> Enter Portal
+                </button>
+            </form>
+
+            <!-- Sign Up Form -->
+            <form id="signup-form" onsubmit="handleSignup(event)" class="space-y-5 hidden">
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1.5 ml-1 tracking-wider">Full Name</label>
+                    <div class="relative">
+                        <i class="fas fa-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 text-sm"></i>
+                        <input type="text" id="signup-name" required placeholder="Enter full name" class="w-full pl-11 pr-4 py-3.5 rounded-2xl border border-slate-800 bg-slate-950/50 text-white focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all text-sm">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1.5 ml-1 tracking-wider">Email</label>
+                    <div class="relative">
+                        <i class="fas fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 text-sm"></i>
+                        <input type="email" id="signup-email" required placeholder="Enter email" class="w-full pl-11 pr-4 py-3.5 rounded-2xl border border-slate-800 bg-slate-950/50 text-white focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all text-sm">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1.5 ml-1 tracking-wider">Password</label>
+                    <div class="relative">
+                        <i class="fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 text-sm"></i>
+                        <input type="password" id="signup-password" required placeholder="Min. 6 characters" class="w-full pl-11 pr-4 py-3.5 rounded-2xl border border-slate-800 bg-slate-950/50 text-white focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all text-sm">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1.5 ml-1 tracking-wider">Confirm Password</label>
+                    <div class="relative">
+                        <i class="fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 text-sm"></i>
+                        <input type="password" id="signup-confirm" required placeholder="Confirm password" class="w-full pl-11 pr-4 py-3.5 rounded-2xl border border-slate-800 bg-slate-950/50 text-white focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all text-sm">
+                    </div>
+                </div>
+                
+                <div id="signup-error" class="hidden flex items-center justify-center gap-2 text-red-400 text-[11px] font-bold bg-red-950/30 py-2.5 rounded-xl border border-red-900/50">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span id="signup-error-message">Sign up failed</span>
+                </div>
+
+                <button type="submit" id="signup-submit-btn" class="w-full bg-green-600 text-white py-4 rounded-2xl font-bold hover:bg-green-700 transition-all shadow-xl shadow-green-500/20 active:scale-[0.98] flex items-center justify-center gap-2">
+                    <i class="fas fa-user-plus"></i> Create Account
                 </button>
             </form>
             
             <p class="mt-8 text-center text-[10px] text-slate-600 font-medium uppercase tracking-widest">
-                Authorized Access Only • AP.LK Physics
+                AP.LK Physics Resources Portal
             </p>
         </div>
     </div>
@@ -182,6 +282,10 @@
                 </div>
 
                 <div class="flex items-center gap-3">
+                    <div class="hidden sm:flex items-center gap-3 bg-slate-800/50 px-4 py-2 rounded-xl border border-slate-700">
+                        <i class="fas fa-user-circle text-blue-500"></i>
+                        <span id="user-name" class="text-sm font-semibold text-slate-300">User</span>
+                    </div>
                     <button onclick="logout()" class="hidden sm:flex text-slate-400 hover:text-red-400 transition text-sm font-bold items-center gap-2 bg-slate-800/50 px-4 py-2 rounded-xl border border-slate-700">
                         <span>Logout</span>
                         <i class="fas fa-sign-out-alt"></i>
@@ -193,6 +297,10 @@
                 </div>
 
                 <div id="mobile-menu-dropdown" class="absolute top-full right-4 mt-2 w-52 rounded-2xl shadow-2xl z-[60] py-2 overflow-hidden">
+                    <div class="px-5 py-3 bg-slate-800/50 border-b border-slate-700 flex items-center gap-2">
+                        <i class="fas fa-user-circle text-blue-500"></i>
+                        <span id="mobile-user-name" class="text-sm font-semibold text-slate-300">User</span>
+                    </div>
                     <button onclick="navigateTo('home'); toggleMobileMenu();" class="w-full text-left px-5 py-3.5 text-sm font-semibold text-slate-300 hover:bg-slate-800 flex items-center gap-3">
                         <i class="fas fa-home text-blue-500 w-5"></i> Home
                     </button>
@@ -229,9 +337,13 @@
     </div>
 
     <script>
-        const AUTH_CONFIG = { user: "apuser", pass: "ap2027" };
+        // Firebase Configuration - Already initialized in the module script above
         let activePage = 'home';
         let currentFolder = null;
+        let currentUser = null;
+        
+        // Wait for Firebase to be ready
+        window.firebaseReady = window.firebaseReady || false;
 
         const studyNotes = [
             { title: "Theory From Last Week 01", file: "flw 01.pdf", url: "https://drive.google.com/file/d/1EpOjWuu6NRGX7C3YU15rc6JSO93ohGEM/view?usp=sharing" },
@@ -364,29 +476,233 @@
             { id: 110, title: "Homework Discussion 30-09-2025", category: "Discussion", series: "2025 September Recordings", youtubeId: "hGNmA3dhexQ", special: "homework" }
         ];
 
+        function toggleAuthMode(mode) {
+            const loginTab = document.getElementById('login-tab');
+            const signupTab = document.getElementById('signup-tab');
+            const loginForm = document.getElementById('login-form');
+            const signupForm = document.getElementById('signup-form');
+
+            if (mode === 'login') {
+                loginTab.classList.add('border-blue-600', 'text-blue-400');
+                loginTab.classList.remove('border-transparent', 'text-slate-500');
+                signupTab.classList.add('border-transparent', 'text-slate-500');
+                signupTab.classList.remove('border-blue-600', 'text-blue-400');
+                loginForm.classList.remove('hidden');
+                signupForm.classList.add('hidden');
+            } else {
+                signupTab.classList.add('border-green-600', 'text-green-400');
+                signupTab.classList.remove('border-transparent', 'text-slate-500');
+                loginTab.classList.add('border-transparent', 'text-slate-500');
+                loginTab.classList.remove('border-blue-600', 'text-blue-400');
+                signupForm.classList.remove('hidden');
+                loginForm.classList.add('hidden');
+            }
+        }
+
         function handleLogin(e) {
             e.preventDefault();
-            const u = document.getElementById('username').value;
-            const p = document.getElementById('password').value;
-            if (u === AUTH_CONFIG.user && p === AUTH_CONFIG.pass) {
-                sessionStorage.setItem('isAuthorized', 'true');
-                unlockPortal();
-            } else {
-                document.getElementById('login-error').classList.remove('hidden');
-                document.getElementById('login-card').classList.add('shake-error');
-                setTimeout(() => { document.getElementById('login-card').classList.remove('shake-error'); }, 400);
+            console.log('handleLogin called');
+            
+            if (!window.firebaseReady) {
+                alert('⏳ Firebase is still loading. Please wait a moment and try again.\n\nIf this persists, check:\n1. Internet connection\n2. https://console.firebase.google.com\n3. Make sure your domain is authorized');
+                return;
             }
+
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const errorDiv = document.getElementById('login-error');
+            const errorMsg = document.getElementById('error-message');
+            const submitBtn = document.getElementById('login-submit-btn');
+
+            console.log('Login attempt:', { email, password: '***' });
+
+            if (!email || !password) {
+                errorMsg.textContent = 'Please fill in all fields.';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
+
+            const { auth, signInWithEmailAndPassword } = window.firebaseAuth;
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then(userCredential => {
+                    console.log('✅ Login successful:', userCredential.user.email);
+                    currentUser = userCredential.user;
+                    sessionStorage.setItem('isAuthorized', 'true');
+                    errorDiv.classList.add('hidden');
+                    unlockPortal();
+                })
+                .catch(error => {
+                    console.error('❌ Login error code:', error.code);
+                    console.error('❌ Login error message:', error.message);
+                    console.error('❌ Full error:', error);
+                    
+                    const errorMap = {
+                        'auth/user-not-found': 'Email not found. Please sign up.',
+                        'auth/wrong-password': 'Incorrect password.',
+                        'auth/invalid-email': 'Invalid email format.',
+                        'auth/user-disabled': 'This account is disabled.',
+                        'auth/too-many-requests': 'Too many login attempts. Try again later.',
+                        'auth/invalid-credential': 'Invalid email or password.',
+                        'auth/network-request-failed': 'Network error. Check:\n1. Your internet connection\n2. Firebase Console authorized domains (add your domain there)',
+                        'auth/internal-error': 'Firebase internal error. Try refreshing the page.'
+                    };
+                    
+                    let displayError = errorMap[error.code] || `Login failed: ${error.message}`;
+                    
+                    // Check for network issues
+                    if (error.code === 'auth/network-request-failed') {
+                        displayError = '⚠️ Network Issue:\n\n1. Check your internet\n2. Go to Firebase Console\n3. Authentication > Settings\n4. Add your website domain to authorized domains\n\nYour domain: ' + window.location.hostname;
+                    }
+                    
+                    errorMsg.textContent = displayError;
+                    errorDiv.classList.remove('hidden');
+                    document.getElementById('login-card').classList.add('shake-error');
+                    setTimeout(() => { document.getElementById('login-card').classList.remove('shake-error'); }, 400);
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Enter Portal';
+                });
+        }
+
+        function handleSignup(e) {
+            e.preventDefault();
+            console.log('handleSignup called');
+            
+            if (!window.firebaseReady) {
+                alert('⏳ Firebase is still loading. Please wait a moment and try again.');
+                return;
+            }
+
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const confirmPassword = document.getElementById('signup-confirm').value;
+            const errorDiv = document.getElementById('signup-error');
+            const errorMsg = document.getElementById('signup-error-message');
+            const submitBtn = document.getElementById('signup-submit-btn');
+
+            // Validate passwords match
+            if (password !== confirmPassword) {
+                errorMsg.textContent = 'Passwords do not match!';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+
+            if (password.length < 6) {
+                errorMsg.textContent = 'Password must be at least 6 characters.';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+
+            if (!name || !email || !password) {
+                errorMsg.textContent = 'Please fill in all fields.';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating account...';
+
+            const { auth, createUserWithEmailAndPassword, updateProfile } = window.firebaseAuth;
+
+            createUserWithEmailAndPassword(auth, email, password)
+                .then(userCredential => {
+                    console.log('✅ Signup successful:', userCredential.user.email);
+                    // Update user profile with name
+                    return updateProfile(userCredential.user, {
+                        displayName: name
+                    }).then(() => userCredential.user);
+                })
+                .then(user => {
+                    currentUser = user;
+                    sessionStorage.setItem('isAuthorized', 'true');
+                    errorDiv.classList.add('hidden');
+                    unlockPortal();
+                })
+                .catch(error => {
+                    console.error('❌ Signup error code:', error.code);
+                    console.error('❌ Signup error message:', error.message);
+                    
+                    const errorMap = {
+                        'auth/email-already-in-use': 'Email already registered. Please login.',
+                        'auth/weak-password': 'Password is too weak. Use at least 6 characters.',
+                        'auth/invalid-email': 'Invalid email format.',
+                        'auth/operation-not-allowed': 'Sign up is currently disabled.',
+                        'auth/network-request-failed': 'Network error. Check your internet connection.',
+                        'auth/internal-error': 'Firebase internal error. Try refreshing the page.'
+                    };
+                    
+                    errorMsg.textContent = errorMap[error.code] || 'Sign up failed: ' + error.message;
+                    errorDiv.classList.remove('hidden');
+                    document.getElementById('login-card').classList.add('shake-error');
+                    setTimeout(() => { document.getElementById('login-card').classList.remove('shake-error'); }, 400);
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-user-plus"></i> Create Account';
+                });
         }
 
         function unlockPortal() {
             document.getElementById('login-screen').classList.add('hidden-access');
             document.getElementById('app-content').classList.remove('hidden-access');
+            updateUserDisplay();
             renderPage();
         }
 
         function logout() {
-            sessionStorage.removeItem('isAuthorized');
-            location.reload();
+            if (window.firebaseReady) {
+                const { auth, signOut } = window.firebaseAuth;
+                signOut(auth).then(() => {
+                    currentUser = null;
+                    sessionStorage.removeItem('isAuthorized');
+                    location.reload();
+                }).catch(err => {
+                    console.error('❌ Logout error:', err);
+                    location.reload();
+                });
+            } else {
+                sessionStorage.removeItem('isAuthorized');
+                location.reload();
+            }
+        }
+
+        // Monitor authentication state changes
+        if (window.firebaseReady) {
+            const { auth, onAuthStateChanged } = window.firebaseAuth;
+            onAuthStateChanged(auth, user => {
+                console.log('🔐 Auth state changed:', user ? user.email : 'logged out');
+                if (user) {
+                    currentUser = user;
+                    sessionStorage.setItem('isAuthorized', 'true');
+                    if (document.getElementById('app-content').classList.contains('hidden-access')) {
+                        unlockPortal();
+                    }
+                } else {
+                    sessionStorage.removeItem('isAuthorized');
+                    if (!document.getElementById('app-content').classList.contains('hidden-access')) {
+                        location.reload();
+                    }
+                }
+            });
+        } else {
+            // Wait a bit and retry
+            setTimeout(() => {
+                if (window.firebaseReady) {
+                    const { auth, onAuthStateChanged } = window.firebaseAuth;
+                    onAuthStateChanged(auth, user => {
+                        console.log('🔐 Auth state changed:', user ? user.email : 'logged out');
+                        if (user) {
+                            currentUser = user;
+                            sessionStorage.setItem('isAuthorized', 'true');
+                            if (document.getElementById('app-content').classList.contains('hidden-access')) {
+                                unlockPortal();
+                            }
+                        }
+                    });
+                }
+            }, 1000);
         }
 
         function toggleMobileMenu() {
@@ -403,6 +719,14 @@
             if (activeBtn) activeBtn.classList.add('nav-link-active');
             renderPage();
             window.scrollTo(0, 0);
+        }
+
+        function updateUserDisplay() {
+            if (currentUser) {
+                const displayName = currentUser.displayName || currentUser.email.split('@')[0];
+                document.getElementById('user-name').textContent = displayName;
+                document.getElementById('mobile-user-name').textContent = displayName;
+            }
         }
 
         // GOOGLE FORM SUBMISSION HANDLER
