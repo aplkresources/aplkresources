@@ -392,7 +392,8 @@
         ];
 
         const lessons = [
-            // Paper Recordings (Placeholders)
+
+            // Paper Recordings (Placeholder)
             { id: 801, title: "Upcoming Videos - Videos Will Drop Here Soon", category: "Paper", series: "Paper Recordings", youtubeId: "UPCOMING" },
 
             // 2026 March (Placeholder)
@@ -473,7 +474,10 @@
             { id: 107, title: "චලිතය Day 03 - Indeepa recording", category: "Theory", series: "2025 September Recordings", youtubeId: "qnZvDEA-t08"},
             { id: 108, title: "ගුරුත්වය යටතේ චලිතය Day 01 - Indeepa recording", category: "Theory", series: "2025 September Recordings", youtubeId: "oBTgucaFl44"},
             { id: 109, title: "ගුරුත්වය යටතේ චලිතය Day 01 - Rotary recording", category: "Theory", series: "2025 September Recordings", youtubeId: "3wsiPQDRJcU"},
-            { id: 110, title: "Homework Discussion 30-09-2025", category: "Discussion", series: "2025 September Recordings", youtubeId: "hGNmA3dhexQ", special: "homework" }
+            { id: 110, title: "Homework Discussion 30-09-2025", category: "Discussion", series: "2025 September Recordings", youtubeId: "hGNmA3dhexQ", special: "homework" },
+
+            // RD Recordings (Placeholder)
+            { id: 901, title: "Upcoming Videos - Videos Will Drop Here Soon", category: "Paper", series: "RD Recordings", youtubeId: "UPCOMING" }
         ];
 
         function toggleAuthMode(mode) {
@@ -848,6 +852,7 @@
                         `;
                     } else {
                         const folders = [
+                            { name: "Ruwan Darshana Recordings", label: "RD Recordings", badge: "UPCOMING", icon: "fa-lock" },
                             { name: "Paper Recordings", label: "Paper Recordings", badge: "UPCOMING", icon: "fa-file" },
                             { name: "2026 March Recordings", label: "2026 March", badge: "UPDATED", icon: "fa-rocket" },
                             { name: "2026 February Recordings", label: "2026 February", badge: "UPDATED", icon: "fa-star" },
@@ -855,7 +860,8 @@
                             { name: "2025 December Recordings", label: "2025 December", badge: "UPCOMING", icon: "fa-snowflake" },
                             { name: "2025 November Recordings", label: "2025 November", badge: "ACTIVE", icon: "fa-play" },
                             { name: "2025 October Recordings", label: "2025 October", badge: "ACTIVE", icon: "fa-calendar-alt" },
-                            { name: "2025 September Recordings", label: "2025 September", badge: "ACTIVE", icon: "fa-archive" }
+                            { name: "2025 September Recordings", label: "2025 September", badge: "ACTIVE", icon: "fa-archive" },
+                            
                         ];
 
                         container.innerHTML = `
