@@ -413,9 +413,6 @@
             { id: 714, title: "කාර්යය ශක්තිය ක්ෂමතාව සම්පූර්ණ පාඩම Indeepa recording", category: "Theory", series: "2026 March Recordings", youtubeId: "pWaGIpIs3jQ" },
             { id: 715, title: "කාර්යය ශක්තිය ක්ෂමතාව සම්පූර්ණ පාඩම Rotary recording", category: "Theory", series: "2026 March Recordings", youtubeId: "65SCw4cMbkM" },
 
-
-
-
             // 2026 February (Placeholder)
             { id: 601, title: "ඝර්ෂණය ආරම්භය  Indeepa recording", category: "Theory", series: "2026 February Recordings", youtubeId: "w-SvPy0x_vc" },
             { id: 602, title: "ඝර්ෂණය ආරම්භය  Rotary recording", category: "Theory", series: "2026 February Recordings", youtubeId: "mmYmNZn01wA" },
@@ -430,13 +427,12 @@
             { id: 611, title: "බල සමතුලිතතාවය විශේෂ කරුණු Rotary recording", category: "Theory", series: "2026 February Recordings", youtubeId: "YXLSVCVJ1Xw" },
             { id: 612, title: "ගුරුත්ව කේන්ද්‍රය සම්පූර්ණ පාඩම EXTRA CLASS", category: "Extra", series: "2026 February Recordings", youtubeId: "UXgJtII8HOI" },
 
-
             // 2026 January (Placeholder)
             { id: 501, title: "January Lesson 01 - Upcoming", category: "Theory", series: "2026 January Recordings", youtubeId: "video_jan_1" },
             // 2025 December (Placeholder)
             { id: 401, title: "December Lesson 01 - Theory", category: "Theory", series: "2025 December Recordings", youtubeId: "video_dec_1" },
             
-            // 2025 November Recordings
+            // 2025 November Recordings (Placeholder)
             { id: 301, title: "Homework Discussion 26-08-2025", category: "Discussion", series: "2025 November Recordings", youtubeId: "GgrqY6neJ3U", special: "homework" },
             { id: 302, title: "Homework Discussion 02-09-2025", category: "Discussion", series: "2025 November Recordings", youtubeId: "xmkbdjLNtSc", special: "homework" },
             { id: 303, title: "Homework Discussion 04-11-2025", category: "Discussion", series: "2025 November Recordings", youtubeId: "X9m2q3lCNH0", special: "homework" },
@@ -449,7 +445,7 @@
             { id: 310, title: "Newton නියම ආරම්භය Rotary recording", category: "Theory", series: "2025 November Recordings", youtubeId: "d0xTtqfzoOo" },
             { id: 311, title: "බල වල ලක්ෂණ ආරම්භය recording", category: "Theory", series: "2025 November Recordings", youtubeId: "1qAhNfgWydI" },
 
-            // 2025 October Recordings
+            // 2025 October Recordings (Placeholder)
             { id: 201, title: "ප්‍රක්ෂිප්ත ආරම්භය Indeepa Recording", category: "Theory", series: "2025 October Recordings", youtubeId: "D0TCNw_sLlY" },
             { id: 202, title: "ප්‍රක්ෂිප්ත ආරම්භය Rotary Recording", category: "Theory", series: "2025 October Recordings", youtubeId: "9TB2PIYZ9DY" },
             { id: 203, title: "Homework Discussion 07-10-2025", category: "Discussion", series: "2025 October Recordings", youtubeId: "D1ZgX4gFVj0", special: "homework" },
@@ -467,7 +463,7 @@
             { id: 215, title: "චලිත ප්‍රස්ථාර Day 02 Rotary Recording", category: "Theory", series: "2025 October Recordings", youtubeId: "IL--yiRFf9c" },
             { id: 216, title: "Homework Discussion 28-10-2025", category: "Discussion", series: "2025 October Recordings", youtubeId: "YmQfprUtvbw", special: "homework" },
 
-            // 2025 September Recordings
+            // 2025 September Recordings (Placeholder)
             { id: 101, title: "චලිතය Day 01 - Rotary recording", category: "Theory", series: "2025 September Recordings", youtubeId: "_LZpIyLycA8" },
             { id: 102, title: "චලිතය Day 01 - Indeepa recording", category: "Theory", series: "2025 September Recordings", youtubeId: "Q8ap6gSOw8Q" },
             { id: 103, title: "චලිතය Day 02 - Rotary recording", category: "Theory", series: "2025 September Recordings", youtubeId: "AkJghTZLiWQ" },
@@ -480,7 +476,12 @@
             { id: 110, title: "Homework Discussion 30-09-2025", category: "Discussion", series: "2025 September Recordings", youtubeId: "hGNmA3dhexQ", special: "homework" },
 
             // RD Recordings (Placeholder)
-            { id: 901, title: "Upcoming Videos - Videos Will Drop Here Soon", category: "Paper", series: "RD Recordings", youtubeId: "UPCOMING" }
+            { id: 901, title: "Upcoming Videos - Videos Will Drop Here Soon", category: "Paper", series: "RD Recordings", youtubeId: "UPCOMING" },
+
+            // 2026 April Recordings (Placeholder)
+            { id: 1001, title: "Upcoming Videos - Videos Will Drop Here Soon", category: "Paper", series: "2026 April Recordings", youtubeId: "UPCOMING" }
+
+
         ];
 
         function toggleAuthMode(mode) {
@@ -718,9 +719,22 @@
             menu.style.display = isVisible ? 'none' : 'block';
         }
 
+        function showRecordingsPopup() {
+            const popupFlag = sessionStorage.getItem('recordingsPopupShown');
+            if (!popupFlag) {
+                alert('These recordings are only for 2027 students');
+                sessionStorage.setItem('recordingsPopupShown', 'true');
+            }
+        }
+
         function navigateTo(page, folder = null) {
             activePage = page;
             currentFolder = folder;
+
+            if (page === 'library') {
+                showRecordingsPopup();
+            }
+
             document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('nav-link-active'));
             const activeBtn = document.getElementById(`nav-${page}`);
             if (activeBtn) activeBtn.classList.add('nav-link-active');
@@ -857,6 +871,7 @@
                         const folders = [
                             { name: "Ruwan Darshana Recordings", label: "RD Recordings", badge: "UPCOMING", icon: "fa-lock" },
                             { name: "Paper Recordings", label: "Paper Recordings", badge: "UPCOMING", icon: "fa-file" },
+                            { name: "2026 April Recordings", label: "2026 April", badge: "UPDATED", icon: "fa-globe"},
                             { name: "2026 March Recordings", label: "2026 March", badge: "UPDATED", icon: "fa-rocket" },
                             { name: "2026 February Recordings", label: "2026 February", badge: "UPDATED", icon: "fa-star" },
                             { name: "2026 January Recordings", label: "2026 January", badge: "UPCOMING", icon: "fa-bolt" },
