@@ -393,6 +393,8 @@
             { title: "Theory From Last Week 43", file: "flw 43.pdf", url: "https://drive.google.com/file/d/1bYhp3fBrSfFUwL4Fd4X8222SFumab4V-/view?usp=sharing" },
             { title: "Theory From Last Week 44", file: "flw 44.pdf", url: "https://drive.google.com/file/d/1C25qenfe5njcWhpyGko-jnr898JzBfH2/view?usp=sharing"},
             { title: "Theory From Last Week 45", file: "flw 45.pdf", url: "https://drive.google.com/file/d/1Gl5-j0hfgXDgkyRkdyORg1vVjMW_aDZU/view?usp=sharing"},
+            { title: "Theory From Last Week 46", file: "flw 46.pdf", url: "https://drive.google.com/file/d/15Su2ZVA168hPBCuH8gtOAyImgvrM311s/view?usp=sharing"},
+            { title: "Theory From Last Week 47", file: "flw 47.pdf", url: "https://drive.google.com/file/d/1QnxqpRK0oCHlyWjUyOzmRRJ-fKjp4Qe-/view?usp=sharing"},
         ];
 
         const lessons = [
@@ -486,6 +488,19 @@
             { id: 1001, title: "FLW 43 & 44 Discussion", category: "Discussion", series: "2026 April Recordings", youtubeId: "8Ja3SVL2w5Q", special: "homework" },
             { id: 1002, title: "භ්‍රමණ චලිතය ආරම්භය RECORDING", category: "Theory", series: "2026 April Recordings", youtubeId: "esXJRV6Okhc" },
             { id: 1003, title: "කෝණික චලිතය ආරම්භය ROTARY RECORDING", category: "Theory", series: "2026 April Recordings", youtubeId: "N1Azdgzyfc4" },
+            { id: 1004, title: "01) බල ඝූර්ණය + බල සමතුලිතතාවය ESSAY DISCUSSION", category: "Theory", series: "2026 April Recordings", youtubeId: "iZx8fghIQpk" },
+            { id: 1005, title: "02) ද්‍රවස්ථිතිය ESSAY DISCUSSION", category: "Theory", series: "2026 April Recordings", youtubeId: "vKtIcs6-xls" },
+            { id: 1006, title: "03) චලිත ප්‍රස්ථාර + චලිත සමීකරණ ESSAY DISCUSSION", category: "Theory", series: "2026 April Recordings", youtubeId: "h9Svryma5G4" },
+            { id: 1007, title: "04) කාර්යය ශක්තිය ක්ශමතාවය ESSAY DISCUSSION", category: "Theory", series: "2026 April Recordings", youtubeId: "uTvDjfvurTE" },
+            { id: 1008, title: "05) කාර්යය ශක්තිය ක්ශමතාවය 02 ESSAY DISCUSSION", category: "Theory", series: "2026 April Recordings", youtubeId: "H7CJbB6j2hY" },
+            { id: 1009, title: "06) රේකීය ගම්‍යතා සංස්තිථිය ESSAY DISCUSSION", category: "Theory", series: "2026 April Recordings", youtubeId: "TwlEtVYgVlc" },
+            { id: 1010, title: "භ්‍රමණ චලිතය පාඩම INDEEPA RECORDING", category: "Theory", series: "2026 April Recordings", youtubeId: "q3-wlk51LBE" },
+            { id: 1011, title: "භ්‍රමණ චලිතය පාඩම ROTARY RECORDING", category: "Theory", series: "2026 April Recordings", youtubeId: "riQfrmTkzyg" },
+
+            // 2026 May Recordings (Placeholder)
+            { id: 1101, title: "MECHANICAL POWER EM RECORDING", category: "Theory", series: "2026 May Recordings", youtubeId: "43OJYAV2pTc" },
+            { id: 1102, title: "භ්‍රමණ ස්ථායීතාව පාඩම INDEEPA RECORDING", category: "Theory", series: "2026 May Recordings", youtubeId: "VJ5IUCRuV1E" },
+            { id: 1103, title: "භ්‍රමණ ස්ථායීතාව ROTARY RECORDING", category: "Theory", series: "2026 May Recordings", youtubeId: "pZ6slk2M9bE" },
 
 
         ];
@@ -877,14 +892,15 @@
                         const folders = [
                             { name: "Ruwan Darshana Recordings", label: "RD Recordings", badge: "UPCOMING", icon: "fa-lock" },
                             { name: "Paper Recordings", label: "Paper Recordings", badge: "UPCOMING", icon: "fa-file" },
-                            { name: "2026 April Recordings", label: "2026 April", badge: "UPDATED", icon: "fa-globe"},
-                            { name: "2026 March Recordings", label: "2026 March", badge: "UPDATED", icon: "fa-rocket" },
-                            { name: "2026 February Recordings", label: "2026 February", badge: "UPDATED", icon: "fa-star" },
-                            { name: "2026 January Recordings", label: "2026 January", badge: "UPCOMING", icon: "fa-bolt" },
-                            { name: "2025 December Recordings", label: "2025 December", badge: "UPCOMING", icon: "fa-snowflake" },
-                            { name: "2025 November Recordings", label: "2025 November", badge: "ACTIVE", icon: "fa-play" },
-                            { name: "2025 October Recordings", label: "2025 October", badge: "ACTIVE", icon: "fa-calendar-alt" },
-                            { name: "2025 September Recordings", label: "2025 September", badge: "ACTIVE", icon: "fa-archive" },
+                            { name: "2026 May Recordings", label: "2026 May", badge: "UPCOMING", icon: "fa-cogs", image: "images/icons/may-recordings.svg" }, 
+                            { name: "2026 April Recordings", label: "2026 April", badge: "UPDATED", icon: "fa-globe", image: "images/icons/april-recordings.svg" },
+                            { name: "2026 March Recordings", label: "2026 March", badge: "UPDATED", icon: "fa-rocket", image: "images/icons/march-recordings.svg" },
+                            { name: "2026 February Recordings", label: "2026 February", badge: "UPDATED", icon: "fa-star", image: "images/icons/february-recordings.svg" },
+                            { name: "2026 January Recordings", label: "2026 January", badge: "UPCOMING", icon: "fa-bolt", image: "images/icons/january-recordings.svg" },
+                            { name: "2025 December Recordings", label: "2025 December", badge: "UPCOMING", icon: "fa-snowflake", image: "images/icons/december-recordings.svg" },
+                            { name: "2025 November Recordings", label: "2025 November", badge: "ACTIVE", icon: "fa-play", image: "images/icons/november-recordings.svg" },
+                            { name: "2025 October Recordings", label: "2025 October", badge: "ACTIVE", icon: "fa-calendar-alt", image: "images/icons/october-recordings.svg" },
+                            { name: "2025 September Recordings", label: "2025 September", badge: "ACTIVE", icon: "fa-archive", image: "images/icons/september-recordings.svg" },
                             
                         ];
 
@@ -896,7 +912,7 @@
                                         <div onclick="navigateTo('library', '${f.name}')" class="glass-folder p-10 rounded-[2.5rem] flex flex-col items-center group">
                                             ${f.badge ? `<div class="free-badge ${f.badge === 'UPCOMING' ? 'bg-purple-600' : ''}">${f.badge}</div>` : ''}
                                             <div class="w-20 h-20 bg-blue-600/10 rounded-[2rem] flex items-center justify-center mb-6 text-blue-500 group-hover:bg-blue-600 group-hover:text-white transition-all duration-500">
-                                                <i class="fas ${f.icon} text-2xl"></i>
+                                                ${f.image ? `<img src="${f.image}" alt="${f.label} icon" class="w-16 h-16 object-contain rounded-xl">` : `<i class="fas ${f.icon} text-2xl"></i>`}
                                             </div>
                                             <h3 class="text-2xl font-bold text-white group-hover:text-blue-400 transition-colors">${f.label}</h3>
                                             <p class="text-slate-500 text-sm mt-3 font-medium">Click to view lessons</p>
